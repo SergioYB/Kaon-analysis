@@ -70,42 +70,11 @@ void kaon_simult(){
         }
 
         //FILL h1
-
         h1->Fill(n_kp+1, n_km+1);
-
-        /*
-        if (n_kp == 0){
-            if (n_km == 0){
-                h1->Fill(1,1);
-            } else if (n_km == 1){
-                h1->Fill(1,2);
-            } else{
-                h1->Fill(1,3);
-            }
-        } else if (n_kp == 1){
-            if (n_km == 0){
-                h1->Fill(2,1);
-            } else if (n_km == 1){
-                h1->Fill(2,2);
-            } else {
-                h1->Fill(2,3);
-            }
-        } else {
-            if (n_km == 0){
-                h1->Fill(3,1);
-            } else if (n_km == 1){
-                h1->Fill(3,2);
-            } else {
-                h1->Fill(3,3);
-            }
-        }
-        */
     }
 
     //Scaling histogram for one year production (3y = 10e21 POT)
     double n_POT = get_total_POT(subrun_tree);
-
-    //h1->Scale(10e21/n_POT);
 
     //DRAW h1 ===========================================================================
 
@@ -130,14 +99,6 @@ void kaon_simult(){
     h1->Scale(1e21/(3 * n_POT));
 
     h1->Draw("COLZ");
-
-
-    //Compute total number of events
-    //double total_events = h1->Integral();
-    //double total_K0 = h1->Integral(1,1,1,3);
-    //double total_Kp = h1->Integral(2,2,1,3);
-    //double total_km = h1->Integral(3,3,1,3);
-
     //ADD TEXT
     
     TString xlabel; //To get x label in each iteration
@@ -170,7 +131,7 @@ void kaon_simult(){
         }
     }
 
-    c1->SaveAs("histograms/kaon_simult.pdf");
+    //c1->SaveAs("histograms/kaon_simult.pdf");
     
 }
    

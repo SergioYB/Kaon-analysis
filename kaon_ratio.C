@@ -79,38 +79,10 @@ void kaon_ratio(){
         h1->Fill(1,n_k0+1);
         h1->Fill(2,n_kp+1);
         h1->Fill(3,n_km+1);
-
-        /*
-        if (n_k0 == 0){
-            h1->Fill(1,1);
-        } else if (n_k0 == 1){
-            h1->Fill(1,2);
-        } else if (n_k0 >= 2){
-            h1->Fill(1,3);
-        }
-
-        if (n_kp == 0){
-            h1->Fill(2,1);
-        } else if (n_kp == 1){
-            h1->Fill(2,2);
-        } else if (n_kp >= 2){
-            h1->Fill(2,3);
-        }
-
-        if (n_km == 0){
-            h1->Fill(3,1);
-        } else if (n_km == 1){
-            h1->Fill(3,2);
-        } else if (n_km >= 2){
-            h1->Fill(3,3);
-        }
-        */
     }
 
     //Scaling histogram for one year production (3y = 10e21 POT)
     double n_POT = get_total_POT(subrun_tree);
-
-    //h1->Scale(10e21/n_POT);
 
     //DRAW h1 ===========================================================================
 
@@ -132,17 +104,11 @@ void kaon_ratio(){
     h1->GetXaxis()->SetTitle("K charge");
     h1->GetYaxis()->SetTitle("Number of K");
 
+    //Scaling
     h1->Scale(1e21/(3 * n_POT));
 
     c1->cd(); //Activate canvas c1
     h1->Draw("COLZ");
-
-
-    //Compute total number of events
-    //double total_events = h1->Integral();
-    //double total_K0 = h1->Integral(1,1,1,3);
-    //double total_Kp = h1->Integral(2,2,1,3);
-    //double total_km = h1->Integral(3,3,1,3);
 
     //Add text
     TString xlabel; //To get x label in each iteration
@@ -188,7 +154,7 @@ void kaon_ratio(){
 
 
     //SAVE PLOTS
-    c1->SaveAs("histograms/kaon_classification.pdf");
+    //c1->SaveAs("histograms/kaon_classification.pdf");
 
 }
    
