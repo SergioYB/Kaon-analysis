@@ -1,7 +1,6 @@
 #include "tree_utils.cpp"
 #include "Includes.h"
 
-
 //Computing total POT in all events
 double get_total_POT(TTree* subrun_tree){
     double n_POT = 0;
@@ -17,7 +16,7 @@ double get_total_POT(TTree* subrun_tree){
 }
 
 
-void kaon_ratio(){
+void kaon_simult_all(){
     //Definition of the file from which the tree is readed and the folder inside the ".root" file where the tree is stored
     TFile *input_file;
     TDirectoryFile *tree_dir;
@@ -42,14 +41,14 @@ void kaon_ratio(){
     float sizevec; // size of the vector containing all particles of each event
 
     //Number of K0+- in each event
-    int n_k0;
-    int n_ak0;
     int n_kp;
     int n_km;
+    int n_k0;
+    int n_ak0;
 
     //Create canvas and histogram 
     TCanvas *c1 = new TCanvas("c1", "canvas1", 800, 600);
-    TH2F *h1 = new TH2F("h1", "", 4, 0.5 , 4.5, 3, 0.5, 3.5); //x-> charge, y-> number of kaons
+    TH2F *h1 = new TH2F("h1", "", 4, 0.5 , 4.5, 4, 0.5, 4.5); //x-> n of k+, y-> n of k-
 
     //Loop over the number of events
     for(int i_e = 0; i_e < n_events; i_e++) {
@@ -58,36 +57,61 @@ void kaon_ratio(){
         sizevec = gen_part_trackID->size();
 
         //Set number of kaons to 0
-        n_k0 = 0;
-        n_ak0 = 0;
         n_kp = 0;
         n_km = 0;
+        n_k0 = 0;
+        n_ak0 = 0;
 
-        //Choose interaction mode
-        //if (nu_interaction_mode == 2 & nu_interaction_type == 1092){
-        if (true){
-            //Loop over ALL particles in i-th event
-            for(int j = 0; j < sizevec; j++){
-                if (gen_part_statusCode->at(j) == 1){
-                    if (gen_part_PDGcode->at(j) == 311){
-                        n_k0++;
-                    } else if (gen_part_PDGcode->at(j) == 321){
-                        n_kp++;
-                    } else if (gen_part_PDGcode->at(j) == -321){
-                        n_km++;
-                    } else if (gen_part_PDGcode->at(j) == -311){
-                        n_ak0++;
-                    }
+        //Loop over ALL particles in i-th event
+        for(int j = 0; j < sizevec; j++){
+            if (gen_part_statusCode->at(j) == 1){
+                if (gen_part_PDGcode->at(j) == 321){
+                    n_kp++;
+                } else if (gen_part_PDGcode->at(j) == -321){
+                    n_km++;
+                } else if (gen_part_PDGcode->at(j) == 311){
+                    n_k0++;
+                } else if (gen_part_PDGcode->at(j) == -311){
+                    n_ak0++;
                 }
             }
         }
 
-        //FILL h1 
-
-        h1->Fill(1,n_k0+1);
-        h1->Fill(2,n_ak0+1);
-        h1->Fill(3,n_kp+1);
-        h1->Fill(4,n_km+1);
+        //FILL h1
+        if (n_k0 == 1){
+            h1->Fill(1,1);
+            if (n_ak0 == 1){
+                h1->Fill(1,2);
+                h1->Fill(2,1);
+            } else if (n_kp == 1){
+                h1->Fill(1,3);
+                h1->Fill(3,1);
+            }else if (n_km == 1){
+                h1->Fill(1,4);
+                h1->Fill(4,1);
+            }
+            
+        }
+        if (n_ak0 == 1){
+            h1->Fill(2,2);
+            if (n_kp == 1){
+                h1->Fill(2,3);
+                h1->Fill(3,2);
+            } else if (n_km == 1){
+                h1->Fill(2,4);
+                h1->Fill(4,2);
+            }
+        }
+        if (n_kp == 1){
+            h1->Fill(3,3);
+            if (n_km == 1){
+                h1->Fill(3,4);
+                h1->Fill(4,3);
+            }
+        }
+        if (n_km == 1){
+            h1->Fill(4,4);
+        }
     }
 
     //Scaling histogram for one year production (3y = 10e21 POT)
@@ -102,25 +126,24 @@ void kaon_ratio(){
     h1->GetXaxis()->SetBinLabel(3, "K+");
     h1->GetXaxis()->SetBinLabel(4, "K-");
 
-    h1->GetYaxis()->SetBinLabel(1, "0");
-    h1->GetYaxis()->SetBinLabel(2, "1");
-    h1->GetYaxis()->SetBinLabel(3, "2+");
+    h1->GetYaxis()->SetBinLabel(1, "K0");
+    h1->GetYaxis()->SetBinLabel(2, "#bar{K}0");
+    h1->GetYaxis()->SetBinLabel(3, "K+");
+    h1->GetYaxis()->SetBinLabel(4, "K-");
 
     h1->GetXaxis()->SetTitleSize(0.05);
     h1->GetYaxis()->SetTitleSize(0.05);
     h1->GetXaxis()->SetLabelSize(0.05);
     h1->GetYaxis()->SetLabelSize(0.05);
 
-    h1->GetXaxis()->SetTitle("K charge");
-    h1->GetYaxis()->SetTitle("Number of K");
+    //h1->GetXaxis()->SetTitle("N K-");
+    //h1->GetYaxis()->SetTitle("N K0");
 
-    //Scaling
     h1->Scale(1e21/(3 * n_POT));
 
-    c1->cd(); //Activate canvas c1
     h1->Draw("COLZ");
-
-    //Add text
+    //ADD TEXT
+    
     TString xlabel; //To get x label in each iteration
     int binsX = h1->GetNbinsX();
     int binsY = h1->GetNbinsY();
@@ -133,9 +156,7 @@ void kaon_ratio(){
                 char text3[50];
                 sprintf(text1, "%.2f", binContent);
                 //sprintf(text2, "%.3f%% of total K events", binContent/h1->Integral()*100);
-                sprintf(text2, "%.3f%% of ttl evnts", binContent/(n_events * 1e21/(3 * n_POT))*100);
-                xlabel = h1->GetXaxis()->GetBinLabel(x);
-                sprintf(text3, "%.3f%% of %s", binContent/h1->Integral(x,x,2,3)*100, xlabel.Data());
+                sprintf(text2, "%.3f%% of total events", binContent/(n_events * 1e21/(3 * n_POT))*100);
 
                 //Creating TText objects
                 TText *t1 = new TText(h1->GetXaxis()->GetBinCenter(x), h1->GetYaxis()->GetBinCenter(y) + 0.2, text1);
@@ -148,23 +169,12 @@ void kaon_ratio(){
 
                 //Draw text on canvas
                 t1->Draw();
-                t2->Draw();
-
-                if (y >1){
-                    TText *t3 = new TText(h1->GetXaxis()->GetBinCenter(x), h1->GetYaxis()->GetBinCenter(y) - 0.2, text3);
-                    
-                    t3->SetTextSize(0.03);
-                    t3->SetTextAlign(22);
-                    t3->Draw();
-                }                
-                
+                //t2->Draw();                
             }
         }
     }
 
-
-    //SAVE PLOTS
-    //c1->SaveAs("histograms/kaon_counting.pdf");
-
+    //c1->SaveAs("histograms/kaon_simult.pdf");
+    
 }
    

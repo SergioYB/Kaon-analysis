@@ -99,8 +99,8 @@ void kaon_simult(){
     h1->Scale(1e21/(3 * n_POT));
 
     h1->Draw("COLZ");
+
     //ADD TEXT
-    
     TString xlabel; //To get x label in each iteration
     int binsX = h1->GetNbinsX();
     int binsY = h1->GetNbinsY();
