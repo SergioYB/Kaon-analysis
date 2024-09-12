@@ -1,7 +1,7 @@
-#include "../includes/tree_utils.cpp"
-#include "../includes/Includes.h"
-#include "../includes/read_event_tree.C"
-#include "../includes/read_subrun_tree.C"
+#include "/home/sergioyb/root/kaon_analysis/macros/includes/tree_utils.cpp"
+#include "/home/sergioyb/root/kaon_analysis/macros/includes/Includes.h"
+#include "/home/sergioyb/root/kaon_analysis/macros/includes/read_event_tree.C"
+#include "/home/sergioyb/root/kaon_analysis/macros/includes/read_subrun_tree.C"
 
 //Computing total POT in all events
 double get_total_POT(TTree* subrun_tree){
@@ -22,25 +22,14 @@ double get_total_POT(TTree* subrun_tree){
 */
 
 void k0_slratio(){
-    //Definition of the file from which the tree is readed and the folder inside the ".root" file where the tree is stored
-    TFile *input_file;
-    TDirectoryFile *tree_dir;
 
-    //Definition of the tree that stores information about each LArSoft event
     TTree *event_tree;
     TTree *subrun_tree;
 
-    //Definition of the path where the file containing the truth tree is stored, along with the code that opens the file and both the subrun and the event by event tree
-    string path_to_tree = "analysis_output_truth_BNB_single_100k_events.root";
-    input_file = new TFile(path_to_tree.c_str());
-    tree_dir = (TDirectoryFile*)input_file->Get("ana");
-    event_tree =(TTree*)tree_dir->Get("tree");
-    subrun_tree =(TTree*)tree_dir->Get("subrun_tree");
+    string data_dir = "/home/sergioyb/root/kaon_analysis/data/analysis_output_truth_k0_events.root";
 
-
-    //Code that sets the Branches fot the subrun and event trees in order to use the information they store, please visit "tree_utils.cpp" to see how the functions are defined
-    set_branch(event_tree);
-    set_branch_subtree(subrun_tree);
+    event_tree = (TTree*)read_event_tree(data_dir);
+    //subrun_tree = (TTree*)read_subrun_tree();
 
     int n_events = event_tree->GetEntries();
     float size_g4; // size of the vector containing g4 particles of each event
@@ -53,7 +42,7 @@ void k0_slratio(){
 
     //Create canvas and histogram 
     TCanvas *c1 = new TCanvas("c1", "canvas1", 800, 600);
-    TH1F *h1 = new TH1F("h1", "Ks vs Kl", 2, 0.5 , 2.5); //x-> type of K0, y-> counts
+    TH2F *h1 = new TH2F("h1", "", 2, 0.5 , 2.5, 3, 0.5, 3.5); //x-> type of K0, y-> counts
 
     //Loop over the number of events
     for(int i_e = 0; i_e < n_events; i_e++) {
@@ -68,14 +57,13 @@ void k0_slratio(){
         n_kl = 0;
 
 
-        /*
-        for(int j = 0; j < size_gen; j++){
-            if(gen_part_PDGcode->at(j) == 311){
-                cout << j << "    " << gen_part_trackID->at(j) << endl;
+        //Loop over g4 particles to finds primary k0
+        for(int i_p = 0; i_p < size_g4; i_p++){
+            if((g4_part_PDGcode->at(i_p) == 311) & (g4_part_process->at(i_p) == "primary")){
+                //Loop over g4 particles to find k0 children
             }
         }
-        */
-
+        /*
        //cout << g4_part_trackID->at(0) << endl;
         
         int j_k0;
@@ -139,6 +127,7 @@ void k0_slratio(){
                 }
             }
         }
+        */
 
         /*
         if ((n_ks >0) & (n_k0 == 0)){

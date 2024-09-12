@@ -1,7 +1,7 @@
-#include "../includes/tree_utils.cpp"
-#include "../includes/Includes.h"
-#include "../includes/read_event_tree.C"
-#include "../includes/read_subrun_tree.C"
+#include "/home/sergioyb/root/kaon_analysis/macros/includes/tree_utils.cpp"
+#include "/home/sergioyb/root/kaon_analysis/macros/includes/Includes.h"
+#include "/home/sergioyb/root/kaon_analysis/macros/includes/read_event_tree.C"
+#include "/home/sergioyb/root/kaon_analysis/macros/includes/read_subrun_tree.C"
 
 //Computing total POT in all events
 double get_total_POT(TTree* subrun_tree){

@@ -18,8 +18,8 @@ int findPos(const std::vector<int>* v, int a) {
 }
 
 
-//Recursive function that prints all info about a particle siblings
-void print_siblings_gen(int ID, std::string indent, TTree* event_tree, int i_e){
+//Recursive function that prints all info about a particle children
+void print_children_gen(int ID, std::string indent, TTree* event_tree, int i_e){
     //Obtain current event from event_tree
     event_tree->GetEntry(i_e);
 
@@ -39,14 +39,14 @@ void print_siblings_gen(int ID, std::string indent, TTree* event_tree, int i_e){
             //cout << new_indent << "   Start Momentum (x,y,z) : (" << gen_part_P0_X->at(i_p) << ", " << gen_part_P0_Y->at(i_p) << ", " << gen_part_P0_Z->at(i_p)  << ")" << endl;
 
             //Call function again
-            //print_siblings_gen(gen_part_trackID->at(i_p), new_indent, event_tree, i_e);
+            //print_children_gen(gen_part_trackID->at(i_p), new_indent, event_tree, i_e);
         } 
     }
 }
 
 
-void print_siblings_g4(int ID, std::string indent, TTree* event_tree, int i_e){
-    //Recursive function that prints all info about a particle siblings
+void print_children_g4(int ID, std::string indent, TTree* event_tree, int i_e){
+    //Recursive function that prints all info about a particle children
     //Obtain current event from event_tree
     event_tree->GetEntry(i_e);
 
@@ -69,7 +69,7 @@ void print_siblings_g4(int ID, std::string indent, TTree* event_tree, int i_e){
             cout << new_indent << "   Process: " << g4_part_process->at(i_p) << endl;
             cout << new_indent << "   End_process: " << g4_part_end_process->at(i_p) << endl;
             //Call function again
-            print_siblings_g4(g4_part_trackID->at(i_p), new_indent, event_tree, i_e);
+            print_children_g4(g4_part_trackID->at(i_p), new_indent, event_tree, i_e);
         } 
     }
 }
@@ -129,7 +129,7 @@ void k0_res_showinfo(){
             if (gen_part_statusCode->at(j) == 1){
                 if ((gen_part_PDGcode->at(j) == 311) & (nu_interaction_mode == 1)){
 
-                    //Loop over all particles and show info of first resonance and siblings
+                    //Loop over all particles and show info of first resonance and children
                     for(int k = 0; k < size_gen; k++){
                         if (((gen_part_PDGcode->at(k) > 1e5) & (gen_part_PDGcode->at(k) < 1e7)) & (first_res)){
 
@@ -146,7 +146,7 @@ void k0_res_showinfo(){
                             //cout << "   PDGCode: " << gen_part_PDGcode->at(k) << " Mass: " << gen_part_mass->at(k) << " Energy: " << gen_part_E0->at(k)<< endl;
                             //cout << "   Start Pos (x,y,z) : (" << gen_part_start_pos_X->at(k) << ", " << gen_part_start_pos_Y->at(k) << ", " << gen_part_start_pos_Z->at(k)  << ")" << endl;
                             
-                            //print_siblings_gen(gen_part_trackID->at(k), indent, event_tree, i_e);
+                            //print_children_gen(gen_part_trackID->at(k), indent, event_tree, i_e);
                             
                         }
                     }

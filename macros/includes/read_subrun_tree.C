@@ -4,7 +4,7 @@
 //#include "Includes.h"
 
 
-TTree *read_subrun_tree(){
+TTree *read_subrun_tree(string path_to_tree){
 
     //cout << "Cargando los datos del .root del tree 'tree' en event_tree." <<endl;
     //Defino el nombre del TFile (.root) donde voy a leer todas las cosas. Se va a leer el input_file y se va a almacenar su info en tree_dir
@@ -13,7 +13,7 @@ TTree *read_subrun_tree(){
     TTree *subrun_tree;
 
     //Aqui pongo el path y el nombre del .root que voy a leer
-    string path_to_tree = "/home/sergioyb/root/kaon_analysis/data/analysis_output_truth_BNB_single_100k_events.root";
+    //string path_to_tree = "/home/sergioyb/root/kaon_analysis/data/analysis_output_truth_BNB_single_100k_events.root";
     input_file = new TFile(path_to_tree.c_str());
 
     //aqui le digo que me coja las cosas que estan en "ana"

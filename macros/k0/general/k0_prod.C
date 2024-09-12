@@ -1,7 +1,7 @@
-#include "../includes/tree_utils.cpp"
-#include "../includes/Includes.h"
-#include "../includes/read_event_tree.C"
-#include "../includes/read_subrun_tree.C"
+#include "/home/sergioyb/root/kaon_analysis/macros/includes/tree_utils.cpp"
+#include "/home/sergioyb/root/kaon_analysis/macros/includes/Includes.h"
+#include "/home/sergioyb/root/kaon_analysis/macros/includes/read_event_tree.C"
+#include "/home/sergioyb/root/kaon_analysis/macros/includes/read_subrun_tree.C"
 
 //Computing total POT in all events
 double get_total_POT(TTree* subrun_tree){
@@ -96,9 +96,16 @@ void k0_prod(){
     h1->GetXaxis()->SetTitle("Interaction mode");
     h1->GetYaxis()->SetTitle("Number of events");
 
-    h1->Scale(1e21/(3 * n_POT));
+    //h1->Scale(1e21/(3 * n_POT));
 
     h1->SetMinimum(0);
+
+    //Add text
+    TLatex latex;
+    double total = h1->Integral();
+    double tot_res = h1->GetBinContent(1);
+    double tot_discc = h1->GetBinContent(2);
+    double tot_disnc = h1->GetBinContent(3);
 
     //Color settings
 
@@ -109,4 +116,11 @@ void k0_prod(){
     h1->SetFillStyle(1001); 
 
     h1->Draw("HIST");
+
+    latex.DrawLatex(0.8, tot_res * 0.8, Form("%.2f%%", tot_res/total*100)); //Draw text
+    latex.DrawLatex(1.8, tot_discc * 0.9, Form("%.2f%%", tot_discc/total*100)); //Draw text
+    latex.DrawLatex(2.8, tot_disnc * 0.8, Form("%.2f%%", tot_disnc/total*100)); //Draw text
+
+    c1->Update();
+    
 }

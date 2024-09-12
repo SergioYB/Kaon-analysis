@@ -124,7 +124,7 @@ void k0_res_hist_mother(){
 
     //Create canvas and histogram 
     TCanvas *c1 = new TCanvas("c1", "canvas1", 800, 600);
-    TH2F *h1 = new TH2F("h1", "", 6, 0.5 , 6.5, 3, 0.5, 3.5); //x-> mother baryon, y-> brother baryon
+    TH2F *h1 = new TH2F("h1", "", 6, 0.5 , 6.5, 4, 0.5, 4.5); //x-> mother baryon, y-> brother baryon
 
 
     //Loop over the number of events
@@ -192,6 +192,8 @@ void k0_res_hist_mother(){
                                     h1->Fill(1,2);
                                 } else if (n_3122 >0){
                                     h1->Fill(1,3);
+                                } else{
+                                    h1->Fill(1,4);
                                 }
                             } else if (n_202214 > 0){
                                 if (n_3222 > 0){
@@ -200,6 +202,8 @@ void k0_res_hist_mother(){
                                     h1->Fill(2,2);
                                 } else if (n_3122 >0){
                                     h1->Fill(2,3);
+                                } else{
+                                    h1->Fill(2,4);
                                 }
                             } else if (n_212112 > 0){
                                 if (n_3222 > 0){
@@ -208,6 +212,8 @@ void k0_res_hist_mother(){
                                     h1->Fill(3,2);
                                 } else if (n_3122 >0){
                                     h1->Fill(3,3);
+                                } else{
+                                    h1->Fill(3,4);
                                 }
                             } else if (n_202114 > 0){
                                 if (n_3222 > 0){
@@ -216,6 +222,8 @@ void k0_res_hist_mother(){
                                     h1->Fill(4,2);
                                 } else if (n_3122 >0){
                                     h1->Fill(4,3);
+                                } else{
+                                    h1->Fill(4,4);
                                 }
                             } else if (n_212114 > 0){
                                 if (n_3222 > 0){
@@ -225,6 +233,9 @@ void k0_res_hist_mother(){
                                 } else if (n_3122 >0){
                                     h1->Fill(5,3);
                                 }
+                                 else{
+                                    h1->Fill(5,4);
+                                }
                             } else if (n_222114 > 0){
                                 if (n_3222 > 0){
                                     h1->Fill(6,1);
@@ -232,6 +243,8 @@ void k0_res_hist_mother(){
                                     h1->Fill(6,2);
                                 } else if (n_3122 >0){
                                     h1->Fill(6,3);
+                                } else{
+                                    h1->Fill(5,4);
                                 }
                             } else{
                                 cout << gen_part_PDGcode->at(k) << "    " << gen_part_mass->at(k) << endl;
@@ -267,6 +280,7 @@ void k0_res_hist_mother(){
     h1->GetYaxis()->SetBinLabel(1, "#Sigma^{+}");
     h1->GetYaxis()->SetBinLabel(2, "#Sigma^{0}");
     h1->GetYaxis()->SetBinLabel(3, "#Lambda");
+    h1->GetYaxis()->SetBinLabel(4, "None");
 
     h1->GetXaxis()->SetTitleSize(0.05);
     h1->GetYaxis()->SetTitleSize(0.05);
@@ -274,7 +288,7 @@ void k0_res_hist_mother(){
     h1->GetYaxis()->SetLabelSize(0.05);
 
     h1->GetXaxis()->SetTitle("Mother particle");
-    h1->GetYaxis()->SetTitle("Brother particle");
+    h1->GetYaxis()->SetTitle("Sister particle");
 
     //h1->Scale(1e21/(3 * n_POT));
 
