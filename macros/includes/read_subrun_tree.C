@@ -32,7 +32,7 @@ TTree *read_subrun_tree(string path_to_tree){
     //  - Haciendo event_tree->GetEntry(i); se obtienen TODAS las variables de esa entrada del tree
     //  - Se hace lo que se quiera con esa entrada
 
-    cout<<"Todo cargado :)"<<endl;
+    cout<<"subrun_tree cargado :)"<<endl;
 
     return subrun_tree;
 }

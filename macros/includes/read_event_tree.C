@@ -32,6 +32,6 @@ TTree *read_event_tree(string path_to_tree){
     //  - Se recorre mediqante un indice i todas las entries que tiene el tree
     //  - Haciendo event_tree->GetEntry(i); se obtienen TODAS las variables de esa entrada del tree
     //  - Se hace lo que se quiera con esa entrada
-
+    cout<<"event_tree cargado :)"<<endl;
     return event_tree;
 }

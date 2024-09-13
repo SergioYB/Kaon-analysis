@@ -1,7 +1,7 @@
-#include "../includes/tree_utils.cpp"
-#include "../includes/Includes.h"
-#include "../includes/read_event_tree.C"
-#include "../includes/read_subrun_tree.C"
+#include "/home/sergioyb/root/kaon_analysis/macros/includes/tree_utils.cpp"
+#include "/home/sergioyb/root/kaon_analysis/macros/includes/Includes.h"
+#include "/home/sergioyb/root/kaon_analysis/macros/includes/read_event_tree.C"
+#include "/home/sergioyb/root/kaon_analysis/macros/includes/read_subrun_tree.C"
 
 int findPos(const std::vector<int>* v, int a) {
     // Usar std::find para buscar el elemento en el puntero al vector
@@ -98,8 +98,10 @@ void k0_all_info(){
     TTree *event_tree;
     TTree *subrun_tree;
 
-    event_tree = (TTree*)read_event_tree();
-    subrun_tree = (TTree*)read_subrun_tree();
+    string data_dir = "/home/sergioyb/root/kaon_analysis/data/analysis_output_truth_BNB_single_100k_events.root";
+
+    event_tree = (TTree*)read_event_tree(data_dir);
+    subrun_tree = (TTree*)read_subrun_tree(data_dir);
 
     int n_events = event_tree->GetEntries();
     float size_g4; // size of the vector containing g4 particles of each event

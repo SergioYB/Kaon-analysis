@@ -7,9 +7,7 @@
 #include <vector>
 #include <string>
 
-/*
-*********** CREATE HISTOGRAM SHOWING K0S DECAY MODES **********************
-*/
+
 
 void decay_modes(){
 
@@ -34,7 +32,7 @@ void decay_modes(){
 
     //Create canvas and histogram 
     TCanvas *c = new TCanvas("c", "canvas", 800, 600);
-    TH1F *hist = new TH1F("h", "", 3, 3.5 , 3.5); //x-> pi0pi0 of pi+pi.
+    TH1F *hist = new TH1F("h", "", 3, 0.5 , 3.5); //x-> pi0pi0 of pi+pi.
 
     //Loop over the number of events
     for(int i_e = 0; i_e < n_events; i_e++) {
@@ -58,33 +56,52 @@ void decay_modes(){
                     if ((g4_part_mother->at(j_p) == g4_part_trackID->at(i_p)) & (g4_part_process->at(j_p) == "Decay")){
                         if (g4_part_PDGcode->at(j_p) == 111){
                             current_mode = current_mode + "p0";
-                            if (!children_found){
-                                hist->Fill(1);
-                            }
 
                         } else if (g4_part_PDGcode->at(j_p) == 211){
                             current_mode = current_mode + "p+";
-                            if (!children_found){
-                                hist->Fill(2);
-                            }
 
                         } else if (g4_part_PDGcode->at(j_p) == -211){
                             current_mode = current_mode + "p-";
-                            if (!children_found){
-                                hist->Fill(2);
-                            }
 
                         } else{
                             current_mode = current_mode + std::to_string(g4_part_PDGcode->at(j_p));
-                            if (!children_found){
-                                hist->Fill(3);
-                            }
+                            cout << "aaaaaaaaaaaa" << endl;
                         }
-                        children_found = true;
                     }
                 }
 
                 modes.insert(current_mode);
+            }
+        }
+
+
+        //Loop over gen particles to finds primary k0S produced by resonance decay
+        for(int i_p = 0; i_p < size_g4; i_p++){
+            if((g4_part_PDGcode->at(i_p) == 310) & (g4_part_process->at(i_p) == "primary") & (g4_part_end_process->at(i_p) == "Decay")){
+
+                //Loop over g4 particles to find k0 children
+                for (int j_p = 0; j_p < size_g4; j_p++){
+
+                    //Find kaon decay products
+                    if ((g4_part_mother->at(j_p) == g4_part_trackID->at(i_p)) & (g4_part_process->at(j_p) == "Decay")){
+                        if (g4_part_PDGcode->at(j_p) == 111){
+                            hist->Fill(1);
+                            break;
+
+                        } else if (g4_part_PDGcode->at(j_p) == 211){
+                            hist->Fill(2);
+                            break;
+
+                        } else if (g4_part_PDGcode->at(j_p) == -211){
+                            hist->Fill(2);
+                            break;
+
+                        } else{
+                            hist->Fill(3);
+                            break;
+                        }
+                    }
+                }
             }
         }
 
@@ -127,18 +144,20 @@ void decay_modes(){
         cout << "\t" << proc << endl;
     }
 
+    
     //Draw histogram
     hist->SetStats(0);
 
     hist->GetXaxis()->SetBinLabel(1, "#pi^{0} #pi^{0}");
     hist->GetXaxis()->SetBinLabel(2, "#pi^{+} #pi^{-}");
+    hist->GetXaxis()->SetBinLabel(3, "Other");
 
     hist->GetXaxis()->SetTitleSize(0.05);
     hist->GetXaxis()->SetLabelSize(0.07);
     hist->GetYaxis()->SetTitleSize(0.05);
     hist->GetYaxis()->SetLabelSize(0.05);
 
-    hist->GetXaxis()->SetTitle("Decay mode");
+    hist->GetXaxis()->SetTitle("Decay products");
     hist->GetYaxis()->SetTitle("Events");
 
     //hist->Scale(1e21/(3 * n_POT));
@@ -165,6 +184,7 @@ void decay_modes(){
     latex.DrawLatex(1.9, n_ppm * 0.9, Form("%.2f%%", n_ppm/totalK*100)); //Draw text
 
     c->Update();
+    //c->SaveAs("/home/sergioyb/root/kaon_analysis/histograms/k0/onlyk0/k0_decay_modes.jpg");
 
     cout << n_p0 + n_ppm << endl;
 }

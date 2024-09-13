@@ -26,7 +26,7 @@ void k0_slratio(){
     TTree *event_tree;
     TTree *subrun_tree;
 
-    string data_dir = "/home/sergioyb/root/kaon_analysis/data/analysis_output_truth_k0_events.root";
+    string data_dir = "/home/sergioyb/root/kaon_analysis/analysis_output_truth_BNB_single_100k_events.root";
 
     event_tree = (TTree*)read_event_tree(data_dir);
     //subrun_tree = (TTree*)read_subrun_tree();
