@@ -4,25 +4,21 @@
 #include "/home/sergioyb/root/kaon_analysis/macros/includes/read_subrun_tree.C"
 
 
-bool ends_inside_detector(TTree* event_tree, int i_p){
+bool ends_inside_detector(TTree* event_tree, int i_p, double fv){
     // returns true if particle end pos is inside detector
     double x = g4_part_end_pos_X->at(i_p);
     double y = g4_part_end_pos_Y->at(i_p);
     double z = g4_part_end_pos_Z->at(i_p);
 
-    double fv = 20;
-
     //return ((x >= -200) & (x <= 200) & (y >= -200) & (y <= 200) & (z >= 0) & (z <= 500));
     return ((x >= -200 + fv) & (x <= 200 - fv) & (y >= -200 + fv) & (y <= 200 - fv) & (z >= 0 + fv) & (z <= 500 - fv)); //FV
 }
 
-bool starts_inside_detector(TTree* event_tree, int i_p){
+bool starts_inside_detector(TTree* event_tree, int i_p, double fv){
     // returns true if particle start pos is inside detector
     double x = g4_part_start_pos_X->at(i_p);
     double y = g4_part_start_pos_Y->at(i_p);
     double z = g4_part_start_pos_Z->at(i_p);
-
-    double fv = 20;
 
     //return ((x >= -200) & (x <= 200) & (y >= -200) & (y <= 200) & (z >= 0) & (z <= 500));
     return ((x >= -200 + fv) & (x <= 200 - fv) & (y >= -200 + fv) & (y <= 200 - fv) & (z >= 0 + fv) & (z <= 500 - fv)); //FV
@@ -30,6 +26,8 @@ bool starts_inside_detector(TTree* event_tree, int i_p){
 
 
 void ks_kl_contenido(){
+
+    double fv = 10;
 
     TTree *event_tree;
     TTree *subrun_tree;
@@ -57,14 +55,14 @@ void ks_kl_contenido(){
 
         //Loop over g4 particles to finds primary k0 created inside detector
         for(int i_p = 0; i_p < size_g4; i_p++){
-            if((g4_part_PDGcode->at(i_p) == 311) & (g4_part_process->at(i_p) == "primary") & (starts_inside_detector(event_tree,i_p))){
+            if((g4_part_PDGcode->at(i_p) == 311) & (g4_part_process->at(i_p) == "primary") & (starts_inside_detector(event_tree,i_p,fv))){
 
                 //Loop over g4 particles to find k0s or l and check if it is inside or outside
                 for (int j_p = 0; j_p < size_g4; j_p++){
 
                     //Find ks
                     if ((g4_part_mother->at(j_p) == g4_part_trackID->at(i_p)) & (g4_part_PDGcode->at(j_p) == 310)){
-                        if (ends_inside_detector(event_tree, j_p)){
+                        if (ends_inside_detector(event_tree, j_p, fv)){
                             hist->Fill(1,1);
                         } else {
                             hist->Fill(1,2);
@@ -74,7 +72,7 @@ void ks_kl_contenido(){
 
                     //Find kl
                     if ((g4_part_mother->at(j_p) == g4_part_trackID->at(i_p)) & (g4_part_PDGcode->at(j_p) == 130)){
-                        if (ends_inside_detector(event_tree, j_p)){
+                        if (ends_inside_detector(event_tree, j_p, fv)){
                             hist->Fill(2,1);
                         } else {
                             hist->Fill(2,2);

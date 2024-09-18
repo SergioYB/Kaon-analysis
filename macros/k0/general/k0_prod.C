@@ -26,8 +26,10 @@ void k0_prod(){
     TTree *event_tree;
     TTree *subrun_tree;
 
-    event_tree = (TTree*)read_event_tree();
-    subrun_tree = (TTree*)read_subrun_tree();
+    string data_dir = "/home/sergioyb/root/kaon_analysis/data/analysis_output_truth_BNB_single_100k_events.root";
+
+    event_tree = (TTree*)read_event_tree(data_dir);
+    subrun_tree = (TTree*)read_subrun_tree(data_dir);
 
     int n_events = event_tree->GetEntries();
     float size_g4; // size of the vector containing g4 particles of each event
@@ -122,5 +124,9 @@ void k0_prod(){
     latex.DrawLatex(2.8, tot_disnc * 0.8, Form("%.2f%%", tot_disnc/total*100)); //Draw text
 
     c1->Update();
+
+    cout << h1->GetBinContent(1)<< endl;
+    cout << h1->GetBinContent(2)<< endl;
+    cout << h1->GetBinContent(3)<< endl;
     
 }
